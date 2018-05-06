@@ -6,12 +6,17 @@ import router from './router'
 import store from './store'
 import ethUtil from 'ethereumjs-util'
 import crypto from 'crypto'
+import globalutil from "./utils/globalutil";
 
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 Vue.prototype.ethUtil= ethUtil
 Vue.prototype.crypto= crypto
+Vue.prototype.globalutil= globalutil
+Vue.prototype.kdf= 'scrypt'
+Vue.prototype.scrypt_n= 8192
+
 new Vue({
   el: '#app',
   router,
