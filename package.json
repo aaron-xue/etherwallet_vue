@@ -10,8 +10,11 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "axios": "^0.18.0",
+    "bignumber.js": "^7.0.1",
     "crypto-browserify": "^3.12.0",
     "ethereumjs-util": "^5.2.0",
+    "ethereumjs-tx": "^1.3.4",
     "scryptsy": "^2.0.0",
     "uuid": "^3.2.1",
     "vue": "^2.5.2",
