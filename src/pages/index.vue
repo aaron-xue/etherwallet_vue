@@ -4,8 +4,8 @@
     <div id="main_head">
       <i id="logo"></i>
       <div id="main_tab">
-        <router-link tag="div" to="createWallet" active-class="main_tab_active">创建钱包</router-link>
-        <router-link tag="div" to="importWallet" active-class="main_tab_active">导入钱包</router-link>
+        <router-link tag="div" :to="{name:'createWallet'}" active-class="main_tab_active">创建钱包</router-link>
+        <router-link tag="div" :to="{name:'importWallet'}" active-class="main_tab_active">导入钱包</router-link>
       </div>
     </div>
     <div id="main_head_line"></div>

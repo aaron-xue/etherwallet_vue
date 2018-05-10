@@ -4,23 +4,40 @@
     <div class="item_wrap">
       <h2>创建钱包</h2>
       <h3>创建一个密码（至少9位数）</h3>
-      <input type="text">
-      <div class="btn">生成</div>
+      <myInput readonly='' class="input" type='password' v-model="account.password"></myInput>
+      <div class="btn" @click="creatWallet(account.password)">生成</div>
     </div>
   </div>
 </template>
 
 <script>
+import myInput from '../components/myInput'
+import walletCtrl from "../utils/walletCtrl";
+
 export default {
   data() {
-    return {};
+    return {
+      wallet:{},
+      account:{
+        password:''
+      }
+    };
   },
 
-  components: {},
+  components: {
+    myInput
+  },
 
   mounted() {},
 
-  methods: {}
+  methods: {
+    creatWallet(passWord) {
+      this.wallet = walletCtrl.genNewWallet(passWord);
+      this.$store.commit("createWallet", this.wallet);
+      this.$store.commit("createAccount", this.account);
+      this.$router.push({ name: 'saveWallet'});
+    },
+  }
 };
 </script>
 <style lang='less' scoped>
@@ -52,14 +69,8 @@ export default {
     text-align: center;
     margin-top: 58px;
   }
-  input {
-    width: 822px;
-    height: 70px;
-    background-color: #dcdcdc;
-    border-radius: 10px;
-    border: solid 1px #ffffff;
+  .input{
     margin-top: 20px;
-    outline:none;
   }
   .btn {
     display: inline-block;
@@ -74,6 +85,7 @@ export default {
     line-height: 24px;
     letter-spacing: 0px;
     color: #ffffff;
+    cursor: pointer;
   }
 }
 </style>

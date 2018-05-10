@@ -9,6 +9,7 @@ import crypto from 'crypto'
 import globalutil from "./utils/globalutil";
 import BigNumber from "bignumber.js"
 import myFetch from "../static/js/axios"
+import toast from "./components/toast"
 
 Vue.config.productionTip = false
 
@@ -18,9 +19,9 @@ Vue.prototype.crypto = crypto
 Vue.prototype.globalutil = globalutil
 Vue.prototype.kdf = 'scrypt'
 Vue.prototype.scrypt_n = 8192
-Vue.prototype.web3 = web3
 Vue.prototype.BigNumber = BigNumber
 Vue.prototype.myFetch = myFetch
+Vue.prototype.toast = toast
 
 new Vue({
   el: '#app',

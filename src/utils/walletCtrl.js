@@ -3,6 +3,7 @@ import ethUtil from 'ethereumjs-util'
 import crypto from 'crypto'
 import scrypt from 'scryptsy'
 import uuid from 'uuid'
+import toast from '../components/toast'
 
 var Wallet = function (priv, hwType, path, hwTransport) {
     if (typeof priv != "undefined") {
@@ -93,7 +94,11 @@ Wallet.prototype.getV3Filename = function (timestamp) {
 //新建钱包
 function genNewWallet(password) {
     if (!globalUtil.isStrongPass(password)) {
-        console.log('密码错误');
+        this.toast.toastFaill("密码错误", "请输入正确的密码");
+        setTimeout(() => {
+            this.toast.closeToast();
+        }, 2000);
+        return;
     } else {
         var wallet = generate(false);
         return wallet;

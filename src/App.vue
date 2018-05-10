@@ -6,7 +6,19 @@
 
 <script>
 export default {
-  name: "App"
+  data(){
+    return {
+      blobEnc: "241241",
+      encFileName: "",
+      privateKeyString:''
+    };
+  },
+  name: "App",
+  created(){
+    if (!this.$store.state.wallet.privKey) {
+      this.$router.push({ name: 'createWallet'});
+    }
+  }
 };
 </script>
 
