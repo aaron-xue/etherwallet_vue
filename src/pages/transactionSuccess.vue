@@ -9,7 +9,7 @@
       <p class="p2">TX ID:
         <span>{{tx_id}}</span>
       </p>
-      <div class="btn">继续转账</div>
+      <div class="btn" @click="gotoFirstStep">继续转账</div>
     </div>
   </div>
 </template>

@@ -36,7 +36,9 @@ export default {
     this.txData.from = this.$store.state.wallet.getAddressString();
     this.txData.privKey = this.$store.state.wallet.getPrivateKeyString();
   },
-  mounted() {},
+  mounted() {
+    this.getGasLimit();
+  },
 
   methods: {
     nextStep() {
@@ -75,6 +77,17 @@ export default {
           this.txData.nonce = res.data[2].result;
           this.$store.commit("createTxData", this.txData);
           this.$router.push({ name: "transactionStep2" });
+        });
+    },
+    getGasLimit() {
+      this.myFetch
+        .post("eth_blockNumber", [])
+        .then(res => {
+          this.myFetch
+            .post('eth_getBlockByNumber',[res.data.result,true])
+            .then(res=>{
+              this.txData.gasLimit = this.globalutil.toEther(res.data.result.gasLimit);
+            })
         });
     }
   }

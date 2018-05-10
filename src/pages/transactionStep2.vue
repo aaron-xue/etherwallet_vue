@@ -32,8 +32,8 @@ export default {
         gasPrice: "",
         nonce: ""
       },
-      transaction:{
-        tx_id:''
+      transaction: {
+        tx_id: ""
       }
     };
   },

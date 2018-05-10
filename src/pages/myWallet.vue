@@ -39,7 +39,9 @@
         </div>
         <div class="gathering">
           <h3>收款</h3>
-          <div class="qrcode"></div>
+          <div class="qrcode">
+            <canvas ref="qrcode"></canvas>
+          </div>
         </div>
       </div>
     </div>
@@ -47,6 +49,8 @@
 </template>
 
 <script>
+import QRCode from "qrcode";
+
 export default {
   data() {
     return {
@@ -75,7 +79,10 @@ export default {
     this.privateKeyString = this.$store.state.wallet.getPrivateKeyString();
   },
 
-  mounted() {},
+  mounted() {
+    QRCode.toCanvas(this.$refs.qrcode, this.address_from,{ width: 199 }, function(error) {
+    });
+  },
 
   methods: {
     //获取账户余额
