@@ -1,7 +1,7 @@
 <!--  -->
 <template>
-  <div id="ip_wrap" :width='width' :height='height'>
-    <input :type="ip_type" @input="$emit('input', $event.target.value)" :width='width' :height='height' ref="input">
+  <div id="ip_wrap" :style='`width:${width};height:${height}`'>
+    <input :type="ip_type" @input="$emit('input', $event.target.value)" :style='`width:${width};height:${height}`' ref="input">
     <i id="eye" :class="[type,isOpen]" @click="changeOpen"></i>
   </div>
 </template>
@@ -39,11 +39,11 @@ export default {
 <style lang='less' scoped>
 #ip_wrap {
   position: relative;
-  width: 822px;
+  width: 585px;
   height: 70px;
 
   input {
-    width: 822px;
+    width: 585px;
     height: 70px;
     background-color: #dcdcdc;
     border-radius: 10px;

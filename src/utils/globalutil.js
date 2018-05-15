@@ -62,6 +62,14 @@ function isTxDataValid(txData) {
     if (txData.to == "0xCONTRACT") txData.to = '';
 }
 
+function isJson(str) {
+    try {
+        return !!JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+};
+
 function isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
 };
@@ -121,8 +129,8 @@ function toWei(number, unit) {
     return returnValue.toString(10);
 };
 function toEther(number, unit) {
-	var returnValue = new BigNumber(toWei(number, unit)).div(getValueOfUnit('ether'));
-	return returnValue.toString(10);
+    var returnValue = new BigNumber(toWei(number, unit)).div(getValueOfUnit('ether'));
+    return returnValue.toString(10);
 };
 
 function decimalToHex(dec) {
@@ -133,7 +141,7 @@ function trezorUnlockCallback(txData, callback) {
     TrezorConnect.open(function (error) {
         if (error) {
             console.log(error);
-            
+
             if (callback !== undefined) callback({
                 isError: true,
                 error: error
@@ -179,6 +187,23 @@ function getBlob(mime, str) {
     return window.URL.createObjectURL(blob);
 };
 
+function transformToFullName(json) {
+    if (json.name.indexOf('(') !== -1) {
+        return json.name;
+    }
+
+    var typeName = json.inputs.map(function (i) { return i.type; }).join();
+    return json.name + '(' + typeName + ')';
+};
+
+function extractTypeName(name) {
+    /// TODO: make it invulnerable
+    var length = name.indexOf('(');
+    return length !== -1 ? name.substr(length + 1, name.length - 1 - (length + 1)).replace(' ', '') : "";
+};
+
+
+
 export default {
     isStrongPass,
     getBlob,
@@ -186,5 +211,8 @@ export default {
     validateEtherAddress,
     isTxDataValid,
     generateTx,
-    toEther
+    toEther,
+    isJson,
+    transformToFullName,
+    extractTypeName
 }

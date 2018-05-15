@@ -9,6 +9,7 @@ import importByUTC from '@/pages/importByUTC'
 import importByPrivateKey from '@/pages/importByPrivateKey'
 import saveWallet from '@/pages/saveWallet'
 import transaction from '@/pages/transaction'
+import transactionStep1 from '@/pages/transactionStep1'
 import transactionStep2 from '@/pages/transactionStep2'
 import transactionSuccess from '@/pages/transactionSuccess'
 
@@ -54,23 +55,31 @@ export default new Router({
           path: '/myWallet',
           name: 'myWallet',
           component: myWallet,
-          redirect: '/myWallet/transaction',
-          children:[
+          children: [
             {
-              path: '/myWallet/transaction',
+              path: '/myWallet/transaction/:transaction',
               name: 'transaction',
-              component: transaction
+              component: transaction,
+              redirect:'/myWallet/transaction/:transaction/transactionStep1',
+              children: [
+                {
+                  path: '/myWallet/transaction/:transaction/transactionStep1',
+                  name: 'transactionStep1',
+                  component: transactionStep1
+                },
+                {
+                  path: '/myWallet/transaction/:transaction/transactionStep2',
+                  name: 'transactionStep2',
+                  component: transactionStep2
+                },
+                {
+                  path: '/myWallet/transaction/:transaction/transactionSuccess',
+                  name: 'transactionSuccess',
+                  component: transactionSuccess
+                },
+              ]
             },
-            {
-              path: '/myWallet/transactionStep2',
-              name: 'transactionStep2',
-              component: transactionStep2
-            },
-            {
-              path: '/myWallet/transactionSuccess',
-              name: 'transactionSuccess',
-              component: transactionSuccess
-            },
+
           ]
 
         }

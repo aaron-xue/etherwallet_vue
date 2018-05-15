@@ -2,6 +2,7 @@ import wallet from './modules/wallet'
 import account from './modules/account'
 import txData from './modules/txData'
 import transaction from './modules/transaction'
+import mgyData from './modules/mgyData'
 
 export default {
     createWallet(state, data) {
@@ -14,7 +15,10 @@ export default {
         state.txData = data
     },
     createTransaction(state, data){
-        state.tx_id = data
+        state.transaction = data
+    },
+    createMgyData(state, data){
+        state.mgyData = data
     }
 
 }

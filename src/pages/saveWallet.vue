@@ -4,8 +4,10 @@
     <div class="item_wrap">
       <h2>保存keystore和私钥，不要忘记你的密码。</h2>
       <a class="btn imp_file" :href="blobEnc" :download="encFileName" aria-label="下载 Keystore File (UTC / JSON · 推荐加密的) " aria-describedby="x_KeystoreDesc">下载keystore File（UTC）</a>
-      <p>私钥</p>
-      <textarea :value='privateKeyString' readonly></textarea>
+      <div class="private_wrap">
+        <p>私钥</p>
+        <textarea :value='privateKeyString' readonly></textarea>
+      </div>
       <div class="btn goon" @click="goon">继续</div>
     </div>
   </div>
@@ -18,7 +20,7 @@ export default {
       blobEnc: "",
       encFileName: "",
       privateKeyString: "",
-      passWord:''
+      passWord: ""
     };
   },
 
@@ -39,37 +41,37 @@ export default {
 
   methods: {
     goon() {
-      this.$router.push({ name: 'myWallet'});
+      this.$router.push({ name: "myWallet" });
     }
   }
 };
 </script>
 <style lang='less' scoped>
 .item_wrap {
-  width: 823px;
-  height: 689px;
-  margin: 222px auto 0;
+  width: 711px;
+  height: 611px;
+  margin: 149px auto 0;
   h2 {
-    height: 40px;
+    height: 35px;
     font-family: SourceHanSansCN-Regular;
-    font-size: 40px;
+    font-size: 35px;
     font-weight: normal;
     font-stretch: normal;
-    line-height: 40px;
+    line-height: 35px;
     letter-spacing: 0px;
     color: #333333;
     text-align: center;
   }
   .btn {
     display: block;
-    padding: 23px 78px;
+    padding: 13px 45px;
     background-color: #22b9ff;
     border-radius: 10px;
     font-family: SourceHanSansCN-Normal;
-    font-size: 25px;
+    font-size: 20px;
     font-weight: normal;
     font-stretch: normal;
-    line-height: 24px;
+    line-height: 20px;
     letter-spacing: 0px;
     color: #ffffff;
     cursor: pointer;
@@ -78,36 +80,43 @@ export default {
     box-sizing: border-box;
   }
   .imp_file {
-    box-sizing: border-box;
-    width: 100%;
-    margin-top: 45px;
-  }
-  p {
-    height: 25px;
-    font-family: SourceHanSansCN-Normal;
-    font-size: 25px;
-    font-weight: normal;
-    font-stretch: normal;
-    line-height: 25px;
-    letter-spacing: 0px;
-    color: #535353;
+    width: 585px;
     margin-top: 55px;
-  }
-  textarea {
-    width: 100%;
-    height: 167px;
-    background-color: #dcdcdc;
-    border-radius: 10px;
-    border: solid 1px #ffffff;
-    box-sizing: border-box;
-    padding: 20px;
-    margin-top: 8px;
-    outline: none;
-  }
-  .goon {
-    width: 220px;
     height: 70px;
-    margin-top: 94px;
+    line-height: 40px;
+  }
+  .private_wrap {
+    width: 585px;
+    margin: 0 auto;
+    p {
+      height: 20px;
+      font-family: SourceHanSansCN-Normal;
+      font-size: 20px;
+      font-weight: normal;
+      font-stretch: normal;
+      line-height: 20px;
+      letter-spacing: 0px;
+      color: #535353;
+      margin-top: 59px;
+    }
+    textarea {
+      width: 100%;
+      height: 159px;
+      background-color: #dcdcdc;
+      border-radius: 10px;
+      border: solid 1px #ffffff;
+      box-sizing: border-box;
+      padding: 20px;
+      margin-top: 8px;
+      outline: none;
+    }
+  }
+
+  .goon {
+    width: 132px;
+    height:45px;
+    margin-top: 64px;
+    border-radius: 4px;
   }
 }
 </style>

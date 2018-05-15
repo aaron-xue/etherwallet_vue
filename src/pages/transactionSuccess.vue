@@ -18,7 +18,7 @@
 export default {
   data() {
     return {
-      tx_id:this.$store.state.transaction.tx_id
+      tx_id: this.$store.state.transaction.tx_id
     };
   },
 
@@ -27,7 +27,7 @@ export default {
   mounted() {},
 
   methods: {
-    gotoFirstStep(){
+    gotoFirstStep() {
       this.$router.push({ name: "transaction" });
     }
   }
@@ -56,13 +56,13 @@ export default {
   .p1,
   .p2 {
     font-family: SourceHanSansCN-Normal;
-    font-size: 22px;
+    font-size: 20px;
     font-weight: normal;
     font-stretch: normal;
-    line-height: 35px;
+    line-height: 24px;
     letter-spacing: 0px;
     color: #535353;
-    margin-top: 33px;
+    margin-top: 72px;
   }
   .p2 {
     span {
@@ -70,19 +70,22 @@ export default {
       font-weight: normal;
       letter-spacing: 0px;
       color: #323232;
+      word-wrap: break-word;
+      word-break: break-all;
+      overflow: hidden;
     }
   }
   .btn {
     display: inline-block;
-    margin-top: 71px;
-    padding: 23px 78px;
+    margin-top: 50px;
+    padding: 13px 45px;
     background-color: #22b9ff;
-    border-radius: 10px;
+    border-radius: 4px;
     font-family: SourceHanSansCN-Normal;
-    font-size: 25px;
+    font-size: 20px;
     font-weight: normal;
     font-stretch: normal;
-    line-height: 24px;
+    line-height: 20px;
     letter-spacing: 0px;
     color: #ffffff;
     cursor: pointer;

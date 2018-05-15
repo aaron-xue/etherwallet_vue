@@ -3,9 +3,9 @@
   <div>
     <div class="item_wrap">
       <p class="p1">您将发送
-        <span>0.5ETH</span>到地址:</p>
-      <p class="p2">0x116818dBF7F2Ef1AD5083dD686e4b889F5aaaDC0</p>
-      <p class="p3">You are interacting with the ETH chain,provided by MyEtherWallet.<br>你确定这样做吗？
+        <span>{{value}}</span>到地址:</p>
+      <p class="p2">{{toAddress}}</p>
+      <p class="p3">You are interacting with the ETH chain,provided by MyEtherWallet.<br><br>你确定这样做吗？
 
       </p>
       <div class="btn" @click="lastStep">上一步</div>
@@ -34,13 +34,17 @@ export default {
       },
       transaction: {
         tx_id: ""
-      }
+      },
+      toAddress:'',
+      value:''
     };
   },
 
   components: {},
   created() {
     this.txData = this.$store.state.txData;
+    this.toAddress = this.$store.state.mgyData.mgy_address?this.$store.state.mgyData.mgy_address:this.$store.state.txData.to
+    this.value = this.$store.state.mgyData.mgy_value?this.$store.state.mgyData.mgy_value:this.$store.state.txData.value
   },
 
   mounted() {},
@@ -78,7 +82,6 @@ export default {
 </script>
 <style lang='less' scoped>
 .item_wrap {
-  width: 700px;
   .p1 {
     font-family: SourceHanSansCN-Normal;
     font-size: 20px;
@@ -97,12 +100,15 @@ export default {
   }
   .p2 {
     font-family: SourceHanSansCN-Normal;
-    font-size: 25px;
+    font-size: 20px;
     font-weight: normal;
     font-stretch: normal;
     line-height: 41px;
     letter-spacing: 0px;
     color: #323232;
+    word-wrap: break-word;
+    word-break: break-all;
+    overflow: hidden;
   }
   .p3 {
     font-family: SourceHanSansCN-Normal;
@@ -113,18 +119,21 @@ export default {
     letter-spacing: 0px;
     color: #535353;
     margin-top: 33px;
+    word-wrap: break-word;
+    word-break: break-all;
+    overflow: hidden;
   }
   .btn {
     display: inline-block;
-    margin-top: 30px;
-    padding: 23px 78px;
+    margin-top: 82px;
+    padding: 13px 45px;
     background-color: #22b9ff;
-    border-radius: 10px;
+    border-radius: 4px;
     font-family: SourceHanSansCN-Normal;
-    font-size: 25px;
+    font-size: 20px;
     font-weight: normal;
     font-stretch: normal;
-    line-height: 24px;
+    line-height: 20px;
     letter-spacing: 0px;
     color: #ffffff;
     cursor: pointer;

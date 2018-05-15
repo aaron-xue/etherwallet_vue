@@ -3,61 +3,59 @@
   <div>
     <div class="item_wrap">
       <h2>账户详情</h2>
-      <div class='account'>
-        <img src="../assets/icons/head_img.png" alt="head_img">
-        <span>{{address_from}}</span>
-      </div>
-      <div class="row1">
-        <div class="balance">
-          <div class="balance_th">余额
-            <i :class="showBalance?'close':'open'" @click="showBalance_method"></i>
-          </div>
-          <div class="balance_td">ETH:
-            <span>{{showBalance?balance:'****'}}</span>
-          </div>
+      <div :class="['account_wrap',showTransaction?'account_wrap_transform':'']">
+        <img src="../assets/icons/head_img.png">
+        <h3>你的地址：</h3>
+        <p>{{address_from}}</p>
+        <div class="line"></div>
+        <h3>余额</h3>
+        <router-link tag="div" :to="{name:'transaction',params:{transaction:'ETH'}}" class="icon-ETH links" active-class="link_active" @click.native="showTransactionFn">
+          ETH:&nbsp;
+          <span>{{balance}}</span>
+          <i>转账</i>
+        </router-link>
+        <router-link tag="div" :to="{name:'transaction',params:{transaction:'MGY'}}" class="icon-MGY links" active-class="link_active" @click.native="showTransactionFn">
+          MGY:
+          <span>{{balance_mgy}}</span>
+          <i>转账</i>
+        </router-link>
+        <div class="line"></div>
+        <div class="tran_history">交易历史
+          <a href="javascript:;">查看</a>
         </div>
-        <div class="keystore">
-          <div class="keystore_th">Keystore File (UTC / JSON · 推荐加密的)</div>
-          <a class="keystore_dl" :href="blobEnc" :download="encFileName" aria-label="下载 Keystore File (UTC / JSON · 推荐加密的) " aria-describedby="x_KeystoreDesc">点击下载</a>
-        </div>
-      </div>
-      <div class="row2">
-        <div></div>
-        <div class="privatekey">
-          <div class="privatekey_th">私钥
-            <i :class="showPrivateKey?'close':'open'" @click="showPrivateKey_method"></i>
+        <div class="line"></div>
+        <div class="row">
+          <div class="left">
+            <h3>Keystore File</h3>
+            <p>(UTC / JSON 推荐加密的)</p>
+            <a class="imp_file" :href="blobEnc" :download="encFileName" aria-label="下载 Keystore File (UTC / JSON · 推荐加密的) " aria-describedby="x_KeystoreDesc">点击下载</a>
           </div>
-          <div class="privatekey_td">
-            {{showPrivateKey?privateKeyString:'****'}}
-          </div>
-        </div>
-      </div>
-      <div class="row3">
-        <div class="transaction">
-          <h3>转账</h3>
-          <router-view> </router-view>
-        </div>
-        <div class="gathering">
-          <h3>收款</h3>
-          <div class="qrcode">
-            <canvas ref="qrcode"></canvas>
+          <div class="right">
+            <h3>收款</h3>
+            <div class="qrcode">
+              <canvas ref="qrcode"></canvas>
+            </div>
           </div>
         </div>
       </div>
+      <transition name="fade">
+        <router-view class="transaction_wrap"> </router-view>
+      </transition>
     </div>
   </div>
 </template>
 
 <script>
 import QRCode from "qrcode";
+import conTractCtrl from "../utils/conTractCtrl";
 
 export default {
   data() {
     return {
-      showBalance: false,
-      showPrivateKey: false,
+      showTransaction: false,
       address_from: "",
-      balance: "",
+      balance: "0",
+      balance_mgy: "0",
       blobEnc: "",
       encFileName: "",
       privateKeyString: ""
@@ -80,35 +78,57 @@ export default {
   },
 
   mounted() {
-    QRCode.toCanvas(this.$refs.qrcode, this.address_from,{ width: 199 }, function(error) {
-    });
+    QRCode.toCanvas(
+      this.$refs.qrcode,
+      this.address_from,
+      { width: 127 },
+      function(error) {}
+    );
   },
 
   methods: {
     //获取账户余额
     getBalance() {
       this.myFetch
-        .post("eth_getBalance", [this.address_from, "latest"])
+        .postMany([
+          {
+            method: "eth_getBalance",
+            params: [this.address_from, "pending"]
+          },
+          {
+            method: "eth_call",
+            params: [
+              {
+                to: "0x9975927293095e17E89C5122628a7461D1E21DDC",
+                data: conTractCtrl.getTxData(5, {
+                  address: this.address_from
+                })
+              },
+              "pending"
+            ]
+          }
+        ])
         .then(res => {
-          this.balance = this.globalutil.toEther(res.data.result, "wei");
+          this.balance = this.globalutil.toEther(res.data[0].result, "wei");
+          this.balance_mgy = this.globalutil.toEther(res.data[1].result, "wei");
         });
     },
-    showBalance_method() {
-      this.showBalance = !this.showBalance;
-    },
-    showPrivateKey_method() {
-      this.showPrivateKey = !this.showPrivateKey;
+    showTransactionFn() {
+      if (this.showTransaction) {
+        return;
+      }
+      this.showTransaction = !this.showTransaction;
     }
   }
 };
 </script>
 <style lang='less' scoped>
 .item_wrap {
-  width: 1031px;
-  height: 1090px;
+  position: relative;
+  width: 1028px;
+  height: 723px;
   margin: 104px auto 0;
   h2 {
-    height: 40px;
     font-family: SourceHanSansCN-Regular;
     font-size: 40px;
     font-weight: normal;
@@ -117,208 +137,160 @@ export default {
     letter-spacing: 0px;
     color: #333333;
   }
-  .account {
-    height: 66px;
-    line-height: 66px;
-    margin-top: 37px;
-    width: 100%;
+  .account_wrap {
+    position: absolute;
+    top: 36px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 350px;
+    height: 649px;
+    background-color: #ffffff;
+    box-shadow: -1px 0px 10px 0px rgba(0, 0, 0, 0.14);
+    border-radius: 10px;
+    margin: 36px auto;
+    padding: 25px 38px 0;
+    -webkit-transition: 0.5s;
+    -moz-transition: 0.5s;
     img {
-      display: inline-block;
       width: 66px;
       height: 66px;
-      vertical-align: middle;
-      margin-right: 36px;
+      display: block;
+      margin-bottom: 32px;
     }
-    span {
-      height: 25px;
-      font-family: SourceHanSansCN-Regular;
-      font-size: 25px;
+    h3 {
+      display: inline-block;
+      font-size: 20px;
       font-weight: normal;
       font-stretch: normal;
-      line-height: 25px;
+      line-height: 20px;
       letter-spacing: 0px;
-      color: #333333;
-      vertical-align: middle;
+      color: #535353;
     }
-  }
-  .row1 {
-    width: 100%;
-    font-size: 0;
-    margin-top: 95px;
-    div {
-      display: inline-block;
-      width: 50%;
-      font-size: 0;
-    }
-    .balance {
+    p {
+      width: 329px;
+      font-family: SourceHanSansCN-Medium;
+      font-size: 20px;
+      font-weight: normal;
+      font-stretch: normal;
+      line-height: 24px;
+      letter-spacing: 0px;
+      color: #010101;
+      word-wrap: break-word;
+      word-break: break-all;
       overflow: hidden;
-      div {
-        display: block;
+      margin-top: 20px;
+    }
+    .line {
+      height: 1px;
+      background-color: rgba(39, 45, 58, 0.3);
+      opacity: 0.3;
+      margin: 25px 0;
+    }
+    .links {
+      font-family: SourceHanSansCN-Medium;
+      font-size: 20px;
+      font-weight: normal;
+      font-stretch: normal;
+      line-height: 24px;
+      letter-spacing: 0px;
+      margin-top: 19px;
+      cursor: pointer;
+      i {
+        float: right;
       }
-      .balance_th {
-        height: 25px;
-        font-family: SourceHanSansCN-Normal;
-        font-size: 25px;
-        font-weight: normal;
-        font-stretch: normal;
-        line-height: 25px;
-        letter-spacing: 0px;
-        color: #535353;
-        i {
-          cursor: pointer;
-          background-position: center;
-          background-repeat: no-repeat;
-          display: inline-block;
-          width: 19px;
-          height: 12px;
-          margin-left: 16px;
+    }
+    .link_active {
+      color: #22b9ff;
+      &::before {
+        color: #22b9ff;
+      }
+    }
+    .tran_history {
+      font-family: SourceHanSansCN-Normal;
+      font-size: 20px;
+      font-weight: normal;
+      font-stretch: normal;
+      line-height: 24px;
+      letter-spacing: 0px;
+      color: #535353;
+      a {
+        float: right;
+        color: #989898;
+        &:active {
+          color: #22b9ff;
         }
       }
-      .balance_td {
-        height: 25px;
-        font-family: SourceHanSansCN-Medium;
-        font-size: 25px;
-        font-weight: normal;
-        font-stretch: normal;
-        line-height: 25px;
-        letter-spacing: 0px;
-        color: #2c2c2c;
-        margin-top: 29px;
-        span {
-          margin-left: 16px;
-        }
-      }
     }
-    .keystore {
-      overflow: hidden;
-      div {
-        display: block;
-        width: 100%;
-      }
-      .keystore_th {
-        height: 25px;
-        font-family: SourceHanSansCN-Normal;
-        font-size: 25px;
-        font-weight: normal;
-        font-stretch: normal;
-        line-height: 25px;
-        letter-spacing: 0px;
-        color: #535353;
-      }
-      .keystore_dl {
+    .row {
+      height: 153px;
+      .left {
+        width: 171px;
         display: inline-block;
-        width: 112px;
-        height: 36px;
-        border-radius: 4px;
-        border: solid 1px #707070;
-        font-family: SourceHanSansCN-Normal;
-        line-height: 36px;
-        font-size: 20px;
-        font-weight: normal;
-        font-stretch: normal;
-        letter-spacing: 0px;
-        color: #535353;
-        text-align: center;
-        cursor: pointer;
-        margin-top: 21px;
-      }
-    }
-  }
-  .row2 {
-    width: 100%;
-    font-size: 0;
-    margin-top: 106px;
-    div {
-      display: inline-block;
-      width: 50%;
-      font-size: 0;
-    }
-    .privatekey {
-      overflow: hidden;
-      div {
-        display: block;
-      }
-      .privatekey_th {
-        height: 25px;
-        font-family: SourceHanSansCN-Normal;
-        font-size: 25px;
-        font-weight: normal;
-        font-stretch: normal;
-        line-height: 25px;
-        letter-spacing: 0px;
-        color: #535353;
-        i {
-          cursor: pointer;
-          background-position: center;
-          background-repeat: no-repeat;
+        vertical-align: top;
+        p {
+          font-family: SourceHanSansCN-Normal;
+          font-size: 15px;
+          font-weight: normal;
+          font-stretch: normal;
+          line-height: 15px;
+          letter-spacing: 0px;
+          color: #989898;
+          margin-top: 4px;
+        }
+        .imp_file {
           display: inline-block;
-          width: 19px;
-          height: 12px;
-          margin-left: 16px;
+          width: 100px;
+          height: 36px;
+          border-radius: 4px;
+          border: solid 1px #707070;
+          font-family: SourceHanSansCN-Normal;
+          line-height: 36px;
+          font-size: 20px;
+          font-weight: normal;
+          font-stretch: normal;
+          letter-spacing: 0px;
+          color: #535353;
+          text-align: center;
+          cursor: pointer;
+          margin-top: 21px;
         }
       }
-      .privatekey_td {
-        height: 25px;
-        font-family: SourceHanSansCN-Medium;
-        font-size: 12px;
-        font-weight: normal;
-        font-stretch: normal;
-        line-height: 25px;
-        letter-spacing: 0px;
-        color: #2c2c2c;
-        margin-top: 29px;
+      .right {
+        width: 128px;
+        display: inline-block;
+        vertical-align: top;
+        margin-left: 45px;
+        .qrcode {
+          width: 127px;
+          height: 127px;
+          background-color: #b5b5b5;
+          margin-top: 7px;
+        }
       }
     }
   }
-  .row3 {
-    width: 100%;
-    font-size: 0;
-    margin-top: 95px;
-    div {
-      display: inline-block;
-      font-size: 0;
-      overflow: hidden;
-      vertical-align: top;
-    }
-    .transaction {
-      width: 700px;
-      margin-right: 66px;
-      h3 {
-        height: 25px;
-        font-family: SourceHanSansCN-Normal;
-        font-size: 25px;
-        font-weight: normal;
-        font-stretch: normal;
-        line-height: 25px;
-        letter-spacing: 0px;
-        color: #535353;
-      }
-    }
-    .gathering {
-      width: 200px;
-      h3 {
-        height: 25px;
-        font-family: SourceHanSansCN-Normal;
-        font-size: 25px;
-        font-weight: normal;
-        font-stretch: normal;
-        line-height: 25px;
-        letter-spacing: 0px;
-        color: #535353;
-      }
-      .qrcode {
-        width: 199px;
-        height: 199px;
-        background-color: #b5b5b5;
-        margin-top: 41px;
-      }
-    }
+  .account_wrap_transform {
+    transform: translateX(-71%);
   }
-  .open {
-    background: url(../assets/icons/eye_open.png);
+  .transaction_wrap {
+    position: absolute;
+    top: 72px;
+    right: 0;
+    width: 500px;
+    height: 649px;
+    background-color: #ffffff;
+    box-shadow: -1px 0px 10px 0px rgba(0, 0, 0, 0.14);
+    border-radius: 10px;
+    padding: 25px 22px 0;
   }
-  .close {
-    background: url(../assets/icons/eye_close.png);
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 1s;
+  }
+  .fade-enter,
+  .fade-leave-to {
+    opacity: 0;
   }
 }
 </style>

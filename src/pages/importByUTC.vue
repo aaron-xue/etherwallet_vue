@@ -5,7 +5,7 @@
       <input type="file" @change="getFileContent($event)" hidden>
     </label>
     <p>您的钱包被加密，请输入钱包密码：</p>
-    <myInput readonly='' class="input" type='password' v-model="account.password"></myInput>
+    <myInput readonly='' class="input" type='password' v-model="account.password" width='465px'></myInput>
     <div class="btn openclock" @click="decryptWalletByFile">解锁</div>
   </div>
 </template>
@@ -62,22 +62,26 @@ export default {
 <style lang='less' scoped>
 .btn {
   display: inline-block;
-  padding: 23px 78px;
+  margin-top: 50px;
+  padding: 13px 45px;
   background-color: #22b9ff;
-  border-radius: 10px;
+  border-radius: 4px;
   font-family: SourceHanSansCN-Normal;
-  font-size: 25px;
+  font-size: 20px;
   font-weight: normal;
   font-stretch: normal;
-  line-height: 24px;
+  line-height: 20px;
   letter-spacing: 0px;
   color: #ffffff;
   cursor: pointer;
 }
 .imp_file {
+  height: 70px;
   box-sizing: border-box;
   width: 100%;
   margin-top: 45px;
+  line-height: 40px;
+  border-radius: 10px;
 }
 p {
   height: 20px;
@@ -88,12 +92,12 @@ p {
   line-height: 20px;
   letter-spacing: 0px;
   color: #535353;
-  margin-top: 24px;
+  margin-top: 34px;
 }
 .input {
   margin-top: 7px;
 }
 .openclock {
-  margin-top: 174px;
+  margin-top: 56px;
 }
 </style>

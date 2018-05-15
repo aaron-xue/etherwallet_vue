@@ -28,17 +28,17 @@ export default {
 </script>
 <style lang='less' scoped>
 .item_wrap {
-  width: 823px;
-  height: 632px;
-  margin-top: 104px;
-  margin-left: 139px;
+  width: 465px;
+  height: 506px;
+  margin-top: 143px;
+  margin-left: 286px;
   h2 {
-    height: 40px;
+    height: 35px;
     font-family: SourceHanSansCN-Regular;
-    font-size: 40px;
+    font-size: 35px;
     font-weight: normal;
     font-stretch: normal;
-    line-height: 40px;
+    line-height: 35px;
     letter-spacing: 0px;
     color: #333333;
   }
@@ -46,7 +46,7 @@ export default {
     height: 64px;
     font-size: 0;
     line-height: 64px;
-    margin-top: 64px;
+    margin-top: 68px;
     i {
       display: inline-block;
       width: 4px;
@@ -57,14 +57,14 @@ export default {
     }
     div {
       box-sizing: border-box;
-      height: 64px;
+      height: 54px;
       display: inline-block;
-      line-height: 64px;
-      font-size: 30px;
+      line-height: 54px;
+      font-size: 25px;
       vertical-align: middle;
       cursor: pointer;
       font-family: SourceHanSansCN-Regular;
-      font-size: 30px;
+      font-size: 25px;
       font-weight: normal;
       font-stretch: normal;
       letter-spacing: 0px;

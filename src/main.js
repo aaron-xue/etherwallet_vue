@@ -10,6 +10,7 @@ import globalutil from "./utils/globalutil";
 import BigNumber from "bignumber.js"
 import myFetch from "../static/js/axios"
 import toast from "./components/toast"
+import '../src/assets/iconfont/iconfont.css'
 
 Vue.config.productionTip = false
 
