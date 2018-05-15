@@ -21,14 +21,14 @@
         </router-link>
         <div class="line"></div>
         <div class="tran_history">交易历史
-          <a href="javascript:;">查看</a>
+          <a :href="`https://ropsten.etherscan.io/address/${address_from}`">查看</a>
         </div>
         <div class="line"></div>
         <div class="row">
           <div class="left">
-            <h3>Keystore File</h3>
-            <p>(UTC / JSON 推荐加密的)</p>
-            <a class="imp_file" :href="blobEnc" :download="encFileName" aria-label="下载 Keystore File (UTC / JSON · 推荐加密的) " aria-describedby="x_KeystoreDesc">点击下载</a>
+            <h3 v-if="$store.state.account">Keystore File</h3>
+            <p v-if="$store.state.account">(UTC / JSON 推荐加密的)</p>
+            <a class="imp_file" :href="blobEnc" :download="encFileName" aria-label="下载 Keystore File (UTC / JSON · 推荐加密的) " aria-describedby="x_KeystoreDesc" v-if="$store.state.account">点击下载</a>
           </div>
           <div class="right">
             <h3>收款</h3>
@@ -66,14 +66,16 @@ export default {
   created() {
     this.address_from = this.$store.state.wallet.getAddressString();
     this.getBalance();
-    this.blobEnc = this.globalutil.getBlob(
-      "text/json;charset=UTF-8",
-      this.$store.state.wallet.toV3(this.$store.state.account.password, {
-        kdf: this.kdf,
-        n: this.scrypt_n
-      })
-    );
-    this.encFileName = this.$store.state.wallet.getV3Filename();
+    if (this.$store.state.account) {
+      this.blobEnc = this.globalutil.getBlob(
+        "text/json;charset=UTF-8",
+        this.$store.state.wallet.toV3(this.$store.state.account.password, {
+          kdf: this.kdf,
+          n: this.scrypt_n
+        })
+      );
+      this.encFileName = this.$store.state.wallet.getV3Filename();
+    }
     this.privateKeyString = this.$store.state.wallet.getPrivateKeyString();
   },
 
@@ -148,7 +150,7 @@ export default {
     background-color: #ffffff;
     box-shadow: -1px 0px 10px 0px rgba(0, 0, 0, 0.14);
     border-radius: 10px;
-    margin: 36px auto;
+    margin: 36px auto 0;
     padding: 25px 38px 0;
     -webkit-transition: 0.5s;
     -moz-transition: 0.5s;
@@ -198,6 +200,14 @@ export default {
       cursor: pointer;
       i {
         float: right;
+      }
+      span {
+        display: inline-block;
+        width: 200px;
+        overflow: hidden;
+        vertical-align: top;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
     }
     .link_active {

@@ -1,4 +1,4 @@
-# test_vue_project
+# etherwallet_vue
 
 > A Vue.js project
 
