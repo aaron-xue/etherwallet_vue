@@ -82,7 +82,9 @@ export default {
         ])
         .then(res => {
           var balance = this.globalutil.toEther(res.data[0].result, "wei");
-          if (balance < this.txData.value) {
+          console.log(balance,this.txData.value);
+          
+          if (parseFloat(balance) < parseFloat(this.txData.value)) {
             this.toast.toastFaill("余额不足", "请确保余额充足");
             setTimeout(() => {
               this.toast.closeToast();
