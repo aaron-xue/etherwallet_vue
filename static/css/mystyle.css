@@ -73,6 +73,7 @@
     display: block;
     background: url(../../src//assets//icons//toast_success.png);
     margin: 43px auto 34px;
+    cursor: pointer;
 }
 #toast_faill{
     width: 40px;
@@ -80,6 +81,7 @@
     display: block;
     background: url(../../src//assets//icons//toast_faill.png);
     margin: 43px auto 34px;
+    cursor: pointer;
 }
 .toast h3{
     height: 30px;

@@ -9,6 +9,9 @@ function toastSuccess(title,content) {
     }
     toast.innerHTML =`<div><i id='toast_success'></i><h3>${title}</h3><p>${content}</p></div>`
     document.body.appendChild(toast);
+    document.querySelector('#toast_success').addEventListener('click', ()=>{
+        closeToast();
+    })
 }
 //toastClose
 function closeToast() {
@@ -24,6 +27,9 @@ function toastFaill(title,content) {
     }
     toast.innerHTML =`<div><i id='toast_faill'></i><h3>${title}</h3><p>${content}</p></div>`
     document.body.appendChild(toast);
+    document.querySelector('#toast_faill').addEventListener('click', ()=>{
+        closeToast();
+    })
 }
 export default{
     toastSuccess,

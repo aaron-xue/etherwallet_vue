@@ -154,6 +154,7 @@ function trezorUnlockCallback(txData, callback) {
 }
 
 function addTinyMoreToGas(hex) {
+    hex = toWei(hex,'ether');
     hex = sanitizeHex(hex);
     return new BigNumber(40 * getValueOfUnit('gwei')).toString(16);
 }

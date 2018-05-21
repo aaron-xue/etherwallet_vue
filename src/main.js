@@ -11,6 +11,7 @@ import BigNumber from "bignumber.js"
 import myFetch from "../static/js/axios"
 import toast from "./components/toast"
 import '../src/assets/iconfont/iconfont.css'
+import bus from '../src/utils/bus'
 
 Vue.config.productionTip = false
 
@@ -23,6 +24,7 @@ Vue.prototype.scrypt_n = 8192
 Vue.prototype.BigNumber = BigNumber
 Vue.prototype.myFetch = myFetch
 Vue.prototype.toast = toast
+Vue.prototype.bus = bus
 
 new Vue({
   el: '#app',

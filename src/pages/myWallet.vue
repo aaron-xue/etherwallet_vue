@@ -48,6 +48,7 @@
 <script>
 import QRCode from "qrcode";
 import conTractCtrl from "../utils/conTractCtrl";
+import contract from '../utils/contract'
 
 export default {
   data() {
@@ -86,6 +87,9 @@ export default {
       { width: 127 },
       function(error) {}
     );
+    this.bus.$on("updateMyWallet", ()=> {
+      this.getBalance();
+    });
   },
 
   methods: {
@@ -101,7 +105,7 @@ export default {
             method: "eth_call",
             params: [
               {
-                to: "0x9975927293095e17E89C5122628a7461D1E21DDC",
+                to: contract.contractAddress,
                 data: conTractCtrl.getTxData(5, {
                   address: this.address_from
                 })

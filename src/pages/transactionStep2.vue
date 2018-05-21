@@ -57,7 +57,7 @@ export default {
     //转账
     sendTransaction() {
       if (this.txData.gasPrice && this.txData.nonce)
-        this.txData.isOffline = true;
+        this.txData.isOffline = false;
       this.globalutil.generateTx(this.txData, rawTx => {
         console.log(rawTx);
         if (!rawTx.isError) {
@@ -67,6 +67,7 @@ export default {
               this.transaction.tx_id = res.data.result;
               this.$store.commit("createTransaction", this.transaction);
               this.$router.push({ name: "transactionSuccess" });
+              this.bus.$emit('updateMyWallet')
             });
         } else {
           this.toast.toastFaill("转账失败", "请重新转账");

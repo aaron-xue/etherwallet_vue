@@ -7,7 +7,9 @@
       <input type="text" class="input" placeholder="收款人钱包地址" v-model="mgyData.mgy_address" v-if="$route.params.transaction === 'MGY'">
       <input type="text" class="input" placeholder="转账金额" v-model="txData.value" v-if="$route.params.transaction === 'ETH'">
       <input type="text" class="input" placeholder="转账金额" v-model="mgyData.mgy_value" v-if="$route.params.transaction === 'MGY'">
-      <input type="text" class="input" placeholder="矿工费用" v-model="txData.gasLimit">
+      <input type="text" class="input" :placeholder="`Gas Limit : ${gasLimit}`" v-model="txData.gasLimit">
+      <h4>Gas Price <span>{{txData.gasPrice}}</span> </h4>
+      <input type="range" class="ip_range" min="1" max="99" v-model="txData.gasPrice">
       <div class="btn" @click="nextStep">下一步</div>
     </div>
   </div>
@@ -15,6 +17,7 @@
 
 <script>
 import conTractCtrl from "../utils/conTractCtrl";
+import contract from "../utils/contract";
 
 export default {
   data() {
@@ -30,16 +33,16 @@ export default {
         path: "",
         hwType: "",
         hwTransport: "",
-        gasPrice: "",
+        gasPrice: 1,
         nonce: ""
       },
       mgyData: {
         mgy_value: 0,
         mgy_address: ""
-      }
+      },
+      gasLimit: ""
     };
   },
-
   components: {},
   created() {
     this.txData.from = this.$store.state.wallet.getAddressString();
@@ -48,15 +51,14 @@ export default {
   mounted() {
     this.getGasLimit();
   },
-
   methods: {
     nextStep() {
       if (this.$route.params.transaction === "MGY") {
-        this.txData.data = conTractCtrl.getTxData(7, {
+        this.txData.data = conTractCtrl.getTxData(9, {
           address: this.mgyData.mgy_address,
           uint256: this.mgyData.mgy_value
         });
-        this.txData.to = "0x9975927293095e17E89C5122628a7461D1E21DDC";
+        this.txData.to = contract.contractAddress;
       }
       if (!this.globalutil.validateEtherAddress(this.txData.to)) {
         this.toast.toastFaill("地址错误", "请填写正确的收款人地址");
@@ -72,18 +74,14 @@ export default {
             params: [this.$store.state.wallet.getAddressString(), "pending"]
           },
           {
-            method: "eth_gasPrice",
-            params: []
-          },
-          {
             method: "eth_getTransactionCount",
             params: [this.$store.state.wallet.getAddressString(), "pending"]
           }
         ])
         .then(res => {
           var balance = this.globalutil.toEther(res.data[0].result, "wei");
-          console.log(balance,this.txData.value);
-          
+          console.log(balance, this.txData.value);
+
           if (parseFloat(balance) < parseFloat(this.txData.value)) {
             this.toast.toastFaill("余额不足", "请确保余额充足");
             setTimeout(() => {
@@ -91,8 +89,7 @@ export default {
             }, 2000);
             return;
           }
-          this.txData.gasPrice = res.data[1].result;
-          this.txData.nonce = res.data[2].result;
+          this.txData.nonce = res.data[1].result;
           this.$store.commit("createTxData", this.txData);
           this.$store.commit("createMgyData", this.mgyData);
           this.$router.push({ name: "transactionStep2" });
@@ -103,9 +100,7 @@ export default {
         this.myFetch
           .post("eth_getBlockByNumber", [res.data.result, true])
           .then(res => {
-            this.txData.gasLimit = this.globalutil.toEther(
-              res.data.result.gasLimit
-            );
+            this.gasLimit = this.globalutil.toEther(res.data.result.gasLimit);
           });
       });
     }
@@ -140,6 +135,56 @@ export default {
     letter-spacing: 0px;
     color: #989898;
     margin-top: 54px;
+  }
+  .ip_range {
+    display: block;
+    margin-top: 29px;
+    width: 500px;
+    cursor: pointer;
+    background-color: rgba(39, 45, 58, 0.3);
+    height: 1px;
+  }
+  input[type="range"] {
+    -webkit-appearance: none;
+  }
+  input[type="range"]:focus {
+    outline: none;
+  }
+  input[type="range"]::-webkit-slider-runnable-track {
+    border-top: 5px solid #fff;
+    border-bottom: 5px solid #fff;
+  }
+  input[type="range"]::-moz-range-track {
+    border-top: 5px solid #fff;
+    border-bottom: 5px solid #fff;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 23px;
+    width: 23px;
+    background-color: #22b9ff;
+    border-radius: 50%;
+  }
+  input[type="range"]::-moz-range-thumb {
+    -webkit-appearance: none;
+    height: 23px;
+    width: 23px;
+    background-color: #22b9ff;
+    border-radius: 50%;
+  }
+  h4 {
+    height: 20px;
+    font-family: SourceHanSansCN-Normal;
+    font-size: 20px;
+    font-weight: normal;
+    font-stretch: normal;
+    line-height: 20px;
+    letter-spacing: 0px;
+    color: #989898;
+    margin-top: 55px;
+    span {
+      float: right;
+    }
   }
   .btn {
     display: inline-block;
